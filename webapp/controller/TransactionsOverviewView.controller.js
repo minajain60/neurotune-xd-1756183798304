@@ -6,144 +6,168 @@ sap.ui.define([
   "sap/m/MessagePopover",
   "sap/m/MessageItem",
   "sap/ui/core/library",
-  "sap/ui/core/UIComponent"
-], function (Controller, JSONModel, MessageToast, MessageBox, MessagePopover, MessageItem, coreLibrary, UIComponent) {
+  "sap/ui/core/UIComponent",
+  "sap/ui/model/Filter",
+  "sap/ui/model/FilterOperator",
+  "sap/ui/core/util/Export",
+  "sap/ui/core/util/ExportTypeCSV"
+], function (Controller, JSONModel, MessageToast, MessageBox, MessagePopover, MessageItem, coreLibrary, UIComponent, Filter, FilterOperator, Export, ExportTypeCSV) {
   "use strict";
-  
+
   // Shortcut for sap.ui.core.MessageType
   var MessageType = coreLibrary.MessageType;
 
+  /**
+   * @name converted.transactionsoverviewview.controller.TransactionsOverviewView
+   * @class Controller for the TransactionsOverviewView.view.xml view.
+   * @extends sap.ui.core.mvc.Controller
+   */
   return Controller.extend("converted.transactionsoverviewview.controller.TransactionsOverviewView", {
+
+    /**
+     * Called when the view is initialized.
+     * @public
+     */
     onInit: function () {
-      // Initialize models
-      var oModel = new JSONModel();
-      this.getView().setModel(oModel);
-      
+      // Log initialization message
+      console.log("TransactionsOverviewView controller initialized");
+
+      // Load mock data for application areas
+      var oApplicationAreaModel = new JSONModel();
+      oApplicationAreaModel.loadData("model/mockData/applicationAreas.json");
+      this.getView().setModel(oApplicationAreaModel, "applicationAreas");
+
+      // Load mock data for data languages
+      var oDataLanguageModel = new JSONModel();
+      oDataLanguageModel.loadData("model/mockData/dataLanguages.json");
+      this.getView().setModel(oDataLanguageModel, "dataLanguages");
+
+      // Load mock data for master data
+      var oMasterDataModel = new JSONModel();
+      oMasterDataModel.loadData("model/mockData/masterData.json");
+      this.getView().setModel(oMasterDataModel, "masterData");
+
+      // Load mock data for transactional data
+      var oTransactionalDataModel = new JSONModel();
+      oTransactionalDataModel.loadData("model/mockData/transactionalData.json");
+      this.getView().setModel(oTransactionalDataModel, "transactionalData");
+
+      // Load mock data for customizing tables
+      var oCustomizingTablesModel = new JSONModel();
+      oCustomizingTablesModel.loadData("model/mockData/customizingTables.json");
+      this.getView().setModel(oCustomizingTablesModel, "customizingTables");
+
+      // Set default values for dropdowns
+      var oViewModel = new JSONModel({
+        selectedAppAreaKey: "ALL",
+        selectedDataLanguageKey: "EN",
+        searchQuery: "",
+        elsaExtractExpanded: false,
+        exploreExpanded: false
+      });
+      this.getView().setModel(oViewModel, "view");
+
       // Initialize message model for MessageArea/MessagePopover
       var oMessageModel = new JSONModel({
-        messages: [
-          {
-            type: MessageType.Success,
-            title: "System Information",
-            description: "Application converted successfully, Use AI optimize for better result",
-            subtitle: "Conversion complete",
-            counter: 1
-          }
-        ]
+        messages: [{
+          type: MessageType.Success,
+          title: "System Information",
+          description: "Application converted successfully. Use AI optimize for better result",
+          subtitle: "Conversion complete",
+          counter: 1
+        }]
       });
       this.getView().setModel(oMessageModel, "messages");
-      
-      // Converted from WebDynpro: 2025-08-26T04:50:04.454Z
     },
-    
-    // Event handlers
-    onBeforeRendering: function() {
-      // Prepare data before rendering
-    },
-    
-    onAfterRendering: function() {
-      // Adjust UI after rendering
-    },
-    
-    // Enhanced event handlers for special WebDynpro elements
-    
+
     /**
-     * Handle value help request (for ValueHelp / F4 elements)
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Called before the view is rendered.
+     * @public
      */
-    handleValueHelp: function(oEvent) {
-      var oSource = oEvent.getSource();
-      
-      // Create value help dialog if it doesn't exist
-      if (!this._valueHelpDialog) {
-        this._valueHelpDialog = new SelectDialog({
-          title: "Select Value",
-          confirm: function(oEvent) {
-            var oSelectedItem = oEvent.getParameter("selectedItem");
-            if (oSelectedItem) {
-              oSource.setValue(oSelectedItem.getTitle());
-            }
-          }
-        });
-        
-        // Sample items - would be filled with actual data in a real app
-        var oDialogModel = new JSONModel({
-          items: [
-            { title: "Item 1", description: "Description 1" },
-            { title: "Item 2", description: "Description 2" },
-            { title: "Item 3", description: "Description 3" }
-          ]
-        });
-        
-        this._valueHelpDialog.setModel(oDialogModel);
-        this._valueHelpDialog.bindAggregation("items", {
-          path: "/items",
-          template: new StandardListItem({
-            title: "{title}",
-            description: "{description}"
-          })
-        });
+    onBeforeRendering: function () {
+      // Log message
+      console.log("TransactionsOverviewView view will be rendered");
+    },
+
+    /**
+     * Called after the view has been rendered.
+     * @public
+     */
+    onAfterRendering: function () {
+      // Log message
+      console.log("TransactionsOverviewView view rendered");
+    },
+
+    /**
+     * Handle the selection change event for the application area dropdown.
+     * @param {sap.ui.base.Event} oEvent The selection change event.
+     * @public
+     */
+    onAppAreaChange: function (oEvent) {
+      // Get the selected key
+      var sSelectedAppArea = oEvent.getSource().getSelectedKey();
+      // Log the selected application area
+      console.log("Application Area changed to: " + sSelectedAppArea);
+      // Show a message toast
+      MessageToast.show("Application Area changed to: " + sSelectedAppArea);
+      // Apply filtering logic here based on sSelectedAppArea
+    },
+
+    /**
+     * Handle the search event.
+     * @param {sap.ui.base.Event} oEvent The search event.
+     * @public
+     */
+    onSearch: function (oEvent) {
+      // Get the search query
+      var sQuery = oEvent.getParameter("query");
+      // Log the search query
+      console.log("Search performed for: '" + sQuery + "'");
+      // Show a message toast
+      MessageToast.show("Search performed for: '" + sQuery + "'");
+
+      // Create filters for the search
+      var aFilters = [];
+      if (sQuery && sQuery.length > 0) {
+        // Apply filters to the lists based on the search query
+        aFilters.push(new Filter({
+          filters: [
+            new Filter("name", FilterOperator.Contains, sQuery),
+            new Filter("description", FilterOperator.Contains, sQuery)
+          ],
+          and: false
+        }));
       }
-      
-      // Open the dialog
-      this._valueHelpDialog.open();
     },
-    
+
     /**
-     * Handle file download requests (for FileDownload elements)
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Handle the selection change event for the data language dropdown.
+     * @param {sap.ui.base.Event} oEvent The selection change event.
+     * @public
      */
-    onFileDownload: function(oEvent) {
-      // In a real application, this would be connected to a backend service
-      // For now, we'll show a message
-      MessageToast.show("File download initiated");
-      
-      // Sample approach to download a file:
-      // var sUrl = "/api/downloadFile?id=123";
-      // var link = document.createElement("a");
-      // link.href = sUrl;
-      // link.download = "filename.pdf";
-      // link.click();
+    onDataLanguageChange: function (oEvent) {
+      // Get the selected key
+      var sSelectedDataLang = oEvent.getSource().getSelectedKey();
+      // Log the selected data language
+      console.log("Data Language changed to: " + sSelectedDataLang);
+      // Show a message toast
+      MessageToast.show("Data Language changed to: " + sSelectedDataLang);
+      // Apply data language logic here based on sSelectedDataLang
     },
-    
-    /**
-     * Open message popover (for MessageArea elements)
-     * @param {sap.ui.base.Event} oEvent The event object
-     */
-    handleMessagePopoverPress: function(oEvent) {
-      if (!this._messagePopover) {
-        this._messagePopover = new MessagePopover({
-          items: {
-            path: "messages>/messages",
-            template: new MessageItem({
-              type: "{messages>type}",
-              title: "{messages>title}",
-              description: "{messages>description}",
-              subtitle: "{messages>subtitle}",
-              counter: "{messages>counter}"
-            })
-          }
-        });
-        
-        this.getView().byId("messagePopoverBtn").addDependent(this._messagePopover);
-      }
-      
-      this._messagePopover.toggle(oEvent.getSource());
-    },
-    
+
     /**
      * Handle navigation link press events
      * @param {sap.ui.base.Event} oEvent The event object
      */
-    onNavigationLinkPress: function(oEvent) {
+    onNavigationLinkPress: function (oEvent) {
       var oSource = oEvent.getSource();
       var sHref = oSource.getHref();
-      
+
       if (sHref) {
         // If href is set, let the default behavior handle it
         return;
       }
-      
+
       // Otherwise, handle the navigation programmatically
       var sNavTarget = oSource.data("navTarget");
       if (sNavTarget) {
@@ -152,109 +176,348 @@ sap.ui.define([
         // using the router
       }
     },
-    
+
     /**
-     * Handle office control rendering
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Handle the press event for the ELSA Extract link.
+     * @public
      */
-    onOfficeControlRendered: function(oEvent) {
-      // This would normally integrate with MS Office API or similar
-      // In a converted application, this would be replaced by a more appropriate solution
-      console.log("Office control container rendered");
-      
-      var oSource = oEvent.getSource();
-      var sDomRef = oSource.getDomRef();
-      if (sDomRef) {
-        sDomRef.innerHTML = '<div class="sapUiMediumMargin">' +
-          '<div class="sapUiMediumMarginBottom">' +
-          '<span class="sapUiIcon sapUiIconMirrorInRTL" style="font-family:SAP-icons;color:#0854a0;font-size:2.5rem">&#xe0ef;</span>' +
-          '</div>' +
-          '<div class="sapMText">' +
-          '<p>Office document integration would be configured here.</p>' +
-          '<p>In SAPUI5, this typically uses OData services with MS Graph API integration.</p>' +
-          '</div>' +
-          '</div>';
+    onToggleELSAExtract: function () {
+      // Get the current visibility state of the ELSA Extract sub-menu
+      var bCurrentVisibility = this.getView().getModel("view").getProperty("/elsaExtractExpanded");
+
+      // Toggle the visibility state
+      this.getView().getModel("view").setProperty("/elsaExtractExpanded", !bCurrentVisibility);
+
+      // Log the action
+      console.log("ELSA Extract sub-menu toggled: " + (!bCurrentVisibility));
+    },
+
+    /**
+     * Handle the press event for the Explore link.
+     * @public
+     */
+    onToggleExplore: function () {
+      // Get the current visibility state of the Explore sub-menu
+      var bCurrentVisibility = this.getView().getModel("view").getProperty("/exploreExpanded");
+
+      // Toggle the visibility state
+      this.getView().getModel("view").setProperty("/exploreExpanded", !bCurrentVisibility);
+
+      // Log the action
+      console.log("Explore sub-menu toggled: " + (!bCurrentVisibility));
+    },
+
+    /**
+     * Export the table data to a CSV file.
+     * @public
+     */
+    onExportToCSV: function () {
+      // Get the table ID
+      var sTableId = "transactionTable"; // Ensure this matches your table's ID
+      // Get the table instance
+      var oTable = this.getView().byId(sTableId);
+
+      // Verify if the table exists
+      if (!oTable) {
+        console.error("Table with ID '" + sTableId + "' not found.");
+        return;
       }
-    },
-    
-    /**
-     * Open dialog
-     * This is a generic handler for WebDynpro dialog elements
-     * @param {sap.ui.base.Event} oEvent The event object
-     */
-    openDialog: function(oEvent) {
-      // Get the dialog ID from the source control
-      var oSource = oEvent.getSource();
-      var sDialogId = oSource.data("dialogId") || "confirmDialog";
-      
-      // Find the dialog in the view
-      var oDialog = this.getView().byId(sDialogId);
-      if (oDialog) {
-        oDialog.open();
-      } else {
-        MessageToast.show("Dialog with ID '" + sDialogId + "' not found");
+
+      // Get the data from the model
+      var aData = oTable.getModel("transactionalData").getData().transactionalData; // Adjust model name and path
+      if (!aData) {
+        console.error("No data found in the model.");
+        return;
       }
+
+      // Convert the data to CSV format
+      var sCsvContent = this._convertToCSV(aData);
+
+      // Create a Blob object from the CSV content
+      var oBlob = new Blob([sCsvContent], {
+        type: 'text/csv'
+      });
+
+      // Create a URL for the Blob object
+      var sUrl = URL.createObjectURL(oBlob);
+
+      // Create a temporary link element to trigger the download
+      var oLink = document.createElement('a');
+      oLink.href = sUrl;
+      oLink.download = 'transactions_export.csv'; // Set the file name
+      oLink.click();
+
+      // Revoke the URL to free up resources
+      URL.revokeObjectURL(sUrl);
     },
-    
+
     /**
-     * Close dialog
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Convert the given data to CSV format.
+     * @param {Array} aData The data to convert.
+     * @private
+     * @returns {string} The CSV representation of the data.
      */
-    closeDialog: function(oEvent) {
-      var oDialog = oEvent.getSource().getParent();
-      oDialog.close();
+    _convertToCSV: function (aData) {
+      // Check if the data is valid
+      if (!aData || aData.length === 0) {
+        return '';
+      }
+
+      // Extract the headers from the first object in the data array
+      var aHeaders = Object.keys(aData[0]);
+
+      // Join the headers with commas and add a newline character
+      var sCsv = aHeaders.join(',') + '\n';
+
+      // Iterate over each row of data
+      aData.forEach(function (row) {
+        // Map each value in the row to a string, enclose it in double quotes, and replace any existing double quotes with two double quotes
+        var aValues = aHeaders.map(function (header) {
+          return '"' + (row[header] || '').toString().replace(/"/g, '""') + '"';
+        });
+
+        // Join the values with commas and add a newline character
+        sCsv += aValues.join(',') + '\n';
+      });
+
+      // Return the complete CSV string
+      return sCsv;
     },
-    
+
     /**
-     * Handle dialog confirm button press
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Export the table data to an Excel file.
+     * @public
      */
-    onDialogConfirm: function(oEvent) {
-      // Handle dialog confirmation logic
-      MessageToast.show("Dialog confirmed");
-      this.closeDialog(oEvent);
+    onExportToExcel: function () {
+      var oTable = this.getView().byId("transactionTable"); // Replace with your table ID
+
+      // Check if the table exists
+      if (!oTable) {
+        console.error("Table with ID 'transactionTable' not found.");
+        return;
+      }
+
+      // Create an Export object
+      var oExport = new Export({
+        exportType: new ExportTypeCSV({
+          fileExtension: 'xlsx',
+          mimeType: 'application/vnd.ms-excel'
+        }),
+        models: oTable.getModel("transactionalData"), // Use the model containing the data
+        rows: {
+          path: "/transactionalData" // Path to the data array in the model
+        },
+        columns: this._getExportColumns() // Get the columns for export
+      });
+
+      // Save the file
+      oExport.saveFile("transactions_export").then(function () {
+        MessageToast.show("Export completed successfully");
+      });
     },
-    
+
     /**
-     * Handle dialog cancel button press
-     * @param {sap.ui.base.Event} oEvent The event object
+     * Get the columns for the export.
+     * @private
+     * @returns {Array} An array of column definitions for the export.
      */
-    onDialogCancel: function(oEvent) {
-      // Handle dialog cancellation
-      this.closeDialog(oEvent);
+    _getExportColumns: function () {
+      return [{
+        name: "Name", // Column name
+        template: {
+          content: "{name}" // Data binding for the column
+        }
+      }, {
+        name: "Description",
+        template: {
+          content: "{description}"
+        }
+      }];
     },
-    
-    /**
-     * Navigate to SecondView
-     * @param {sap.ui.base.Event} oEvent The event object
-     */
-    onNextPress: function(oEvent) {
-      // Get the router instance
-      var oRouter = UIComponent.getRouterFor(this);
-      
-      // Navigate to the 'second' route
-      oRouter.navTo("second");
-    },
-    
-    /**
-     * Navigate back to main view
-     * @param {sap.ui.base.Event} oEvent The event object
-     */
-    onBackPress: function(oEvent) {
-      // Get the router instance
-      var oRouter = UIComponent.getRouterFor(this);
-      
-      // Navigate to the 'main' route
-      oRouter.navTo("main");
-    },
-    
-    /**
-     * Navigate to a specific route
-     * @param {string} sRoute The route name to navigate to
-     */
-    navTo: function(sRoute) {
-      var oRouter = UIComponent.getRouterFor(this);
-      oRouter.navTo(sRoute);
-    }
+
+        /**
+         * Handles press event on "Home" link to navigate to the main page.
+         */
+        onNavHome: function () {
+            var oRouter = UIComponent.getRouterFor(this);
+            oRouter.navTo("main");
+        },
+
+        /**
+         * Handles press event on "Manage Data" link to navigate to the manage data page.
+         */
+        onManageData: function () {
+            // Placeholder for Manage Data navigation logic
+            MessageToast.show("Navigating to Manage Data");
+        },
+
+        /**
+         * Handles press event on "Extract Jobs" link to navigate to the extract jobs page.
+         */
+        onExtractJobs: function () {
+            // Placeholder for Extract Jobs navigation logic
+            MessageToast.show("Navigating to Extract Jobs");
+        },
+
+        /**
+         * Handles press event on "Synchronization" link to navigate to the synchronization page.
+         */
+        onSynchronization: function () {
+            // Placeholder for Synchronization navigation logic
+            MessageToast.show("Navigating to Synchronization");
+        },
+
+        /**
+         * Handles press event on "Reports" link to navigate to the reports page.
+         */
+        onReports: function () {
+            // Placeholder for Reports navigation logic
+            MessageToast.show("Navigating to Reports");
+        },
+
+        /**
+         * Handles press event on "Transactions" link to navigate to the transactions page.
+         */
+        onTransactions: function () {
+            // Placeholder for Transactions navigation logic
+            MessageToast.show("Navigating to Transactions");
+        },
+
+        /**
+         * Handles press event on "Data" link to navigate to the data page.
+         */
+        onData: function () {
+            // Placeholder for Data navigation logic
+            MessageToast.show("Navigating to Data");
+        },
+
+        /**
+         * Handles press event on "Dynamic Report" link to navigate to the dynamic report page.
+         */
+        onDynamicReport: function () {
+            // Placeholder for Dynamic Report navigation logic
+            MessageToast.show("Navigating to Dynamic Report");
+        },
+
+        /**
+         * Handles press event on "Text To SQL-AI Report" link to navigate to the text to SQL-AI report page.
+         */
+        onTextToSQLAIReport: function () {
+            // Placeholder for Text To SQL-AI Report navigation logic
+            MessageToast.show("Navigating to Text To SQL-AI Report");
+        },
+
+        /**
+         * Handles press event on "SQL Report" link to navigate to the SQL report page.
+         */
+        onSQLReport: function () {
+            // Placeholder for SQL Report navigation logic
+            MessageToast.show("Navigating to SQL Report");
+        },
+
+        /**
+         * Handles press event on "Accounting Report" link to navigate to the accounting report page.
+         */
+        onAccountingReport: function () {
+            // Placeholder for Accounting Report navigation logic
+            MessageToast.show("Navigating to Accounting Report");
+        },
+
+        /**
+         * Handles press event on "Settings" link to navigate to the settings page.
+         */
+        onSettings: function () {
+            // Placeholder for Settings navigation logic
+            MessageToast.show("Navigating to Settings");
+        },
+
+        /**
+         * Handles press event on "Data Masking" link to navigate to the data masking page.
+         */
+        onDataMasking: function () {
+            // Placeholder for Data Masking navigation logic
+            MessageToast.show("Navigating to Data Masking");
+        },
+
+        /**
+         * Handles press event on "Manage Security" link to navigate to the manage security page.
+         */
+        onManageSecurity: function () {
+            // Placeholder for Manage Security navigation logic
+            MessageToast.show("Navigating to Manage Security");
+        },
+
+        /**
+         * Handles press event on "Manage Authorizations" link to navigate to the manage authorizations page.
+         */
+        onManageAuthorizations: function () {
+            // Placeholder for Manage Authorizations navigation logic
+            MessageToast.show("Navigating to Manage Authorizations");
+        },
+
+        /**
+         * Handles press event on "Smart Links" link to navigate to the smart links page.
+         */
+        onSmartLinks: function () {
+            // Placeholder for Smart Links navigation logic
+            MessageToast.show("Navigating to Smart Links");
+        },
+
+        /**
+         * Handles press event on "Logs" link to navigate to the logs page.
+         */
+        onLogs: function () {
+            // Placeholder for Logs navigation logic
+            MessageToast.show("Navigating to Logs");
+        },
+
+        /**
+         * Handles the Share action, typically opens a sharing dialog.
+         */
+        onShare: function () {
+            MessageToast.show("Share functionality triggered.");
+        },
+
+        /**
+         * Handles displaying notifications or opening a notification center.
+         */
+        onShowNotifications: function () {
+            MessageToast.show("Show Notifications triggered.");
+        },
+
+        /**
+         * Handles voice input functionality, possibly activating a microphone.
+         */
+        onVoiceInput: function () {
+            MessageToast.show("Voice Input triggered.");
+        },
+
+        /**
+         * Handles language selection change from the global dropdown.
+         */
+        onLanguageChange: function () {
+            MessageToast.show("Global Language changed.");
+        },
+
+        /**
+         * Handles opening the user menu for profile, logout, etc.
+         */
+        onUserMenu: function () {
+            MessageToast.show("User Menu triggered.");
+        },
+
+        /**
+         * Handles the Create New action, opening a creation dialog or page.
+         */
+        onCreateNew: function () {
+            MessageToast.show("Create New functionality triggered.");
+        },
+
+        /**
+         * Handles the Refresh action, reloading data for the current view.
+         */
+        onRefresh: function () {
+            MessageToast.show("Refresh triggered, reloading data.");
+        }
   });
 });
