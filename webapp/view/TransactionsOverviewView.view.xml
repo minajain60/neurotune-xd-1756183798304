@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:layout="sap.ui.layout"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  xmlns:richtexteditor="sap.ui.richtexteditor"
+  xmlns:viz="sap.viz.ui5"
+  controllerName="preview.app.controller.TransactionsOverviewView"
+  displayBlock="true">
+  <Page title="TransactionsOverviewView" enableScrolling="true">
+    <content>
+      <Page id="page_fuibx0g4" title="TransactionsOverview">
+        <form:SimpleForm id="simpleform_vepzmyvo" editable="true" layout="ResponsiveGridLayout">
+          <Label id="label_nn3q36gj" text="Application Area"/>
+          <Input id="input_chxtbqu9" placeholder="Application Area" value="{/applicationarea}"/>
+          <Label id="label_wmuwqrrj" text="Search"/>
+          <Label id="label_z70e310v" text="Data Language"/>
+          <Button id="button_v0dllp2f" text="Abhishek" type="Emphasized"/>
+        </form:SimpleForm>
+      </Page>
+    </content>
+  </Page>
+</mvc:View>

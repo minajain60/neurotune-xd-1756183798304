@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebDynpro xmlns="http://www.sap.com/wd/webdynpro">
+  <View name="TransactionsOverview">
+    <Title>Transactions overview</Title>
+    <MatrixLayout id="RootLayout" colCount="2" width="100%" height="100%">
+      <!-- Left Navigation Panel -->
+      <MatrixData row="1" col="1" vAlign="top" width="250px">
+        <VerticalFlowLayout id="NavigationPanel" width="100%" height="100%">
+          <!-- Application Title -->
+          <TextView id="AppTitle" text="Enterprise Legacy System Application by TJC" design="Heading3" wrapping="false" paddingBottom="10px"/>
+
+          <!-- Legacy Directory Section -->
+          <Group id="LegacyDirectoryGroup" design="Transparent" width="100%">
+            <TextView id="LegacyDirectoryHeader" text="Legacy Directory" design="Label" wrapping="false" semanticColor="Brand1"/>
+            <Link id="ManageDataLink" text="Manage Data" semanticColor="Default" onAction="onNavigate" tooltip="Manage Data">
+              <Image id="ManageDataIcon" src="sap-icon://folder" alt="Folder Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="ManageDataArrow" src="sap-icon://navigation-right-arrow" alt="Right Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <Link id="ELSAExtractLink" text="ELSA Extract" semanticColor="Default" onAction="onToggleELSAExtract" tooltip="ELSA Extract">
+              <Image id="ELSAExtractIcon" src="sap-icon://download" alt="Download Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="ELSAExtractArrow" src="sap-icon://slim-arrow-down" alt="Down Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <VerticalFlowLayout id="ELSAExtractSubMenu" visible="{/elsaExtractExpanded}" paddingLeft="20px">
+              <Link id="ExtractJobsLink" text="Extract Jobs" semanticColor="Default" onAction="onNavigate" tooltip="Extract Jobs"/>
+              <Link id="SynchronizationLink" text="Synchronization" semanticColor="Default" onAction="onNavigate" tooltip="Synchronization"/>
+            </VerticalFlowLayout>
+          </Group>
+
+          <!-- Explore Section -->
+          <Group id="ExploreGroup" design="Transparent" width="100%" paddingTop="10px">
+            <Link id="ExploreLink" text="Explore" semanticColor="Default" onAction="onToggleExplore" tooltip="Explore">
+              <Image id="ExploreIcon" src="sap-icon://explore-grid" alt="Explore Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="ExploreArrow" src="sap-icon://slim-arrow-down" alt="Down Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <VerticalFlowLayout id="ExploreSubMenu" visible="{/exploreExpanded}" paddingLeft="20px">
+              <Link id="ReportsLink" text="Reports" semanticColor="Default" onAction="onNavigate" tooltip="Reports"/>
+              <Link id="TransactionsLink" text="Transactions" semanticColor="Emphasis" onAction="onNavigate" tooltip="Transactions" backgroundColor="Standard">
+                <Image id="TransactionsIcon" src="sap-icon://activity-individual" alt="Activity Icon" width="16px" height="16px" marginRight="5px"/>
+              </Link>
+              <Link id="DataLink" text="Data" semanticColor="Default" onAction="onNavigate" tooltip="Data"/>
+              <Link id="DynamicReportLink" text="Dynamic Report" semanticColor="Default" onAction="onNavigate" tooltip="Dynamic Report"/>
+              <Link id="TextToSQLAIReportLink" text="Text To SQL-AI Report" semanticColor="Default" onAction="onNavigate" tooltip="Text To SQL-AI Report"/>
+              <Link id="SQLReportLink" text="SQL Report" semanticColor="Default" onAction="onNavigate" tooltip="SQL Report"/>
+              <Link id="AccountingReportLink" text="Accounting Report" semanticColor="Default" onAction="onNavigate" tooltip="Accounting Report"/>
+            </VerticalFlowLayout>
+          </Group>
+
+          <!-- Settings Section -->
+          <Group id="SettingsGroup" design="Transparent" width="100%" paddingTop="10px">
+            <Link id="SettingsLink" text="Settings" semanticColor="Default" onAction="onNavigate" tooltip="Settings">
+              <Image id="SettingsIcon" src="sap-icon://action-settings" alt="Settings Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="SettingsArrow" src="sap-icon://navigation-right-arrow" alt="Right Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <Link id="DataMaskingLink" text="Data Masking" semanticColor="Default" onAction="onNavigate" tooltip="Data Masking">
+              <Image id="DataMaskingIcon" src="sap-icon://key-user-settings" alt="Key User Settings Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="DataMaskingArrow" src="sap-icon://navigation-right-arrow" alt="Right Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <Link id="ManageSecurityLink" text="Manage Security" semanticColor="Default" onAction="onNavigate" tooltip="Manage Security">
+              <Image id="ManageSecurityIcon" src="sap-icon://private" alt="Private Icon" width="16px" height="16px" marginRight="5px"/>
+              <Image id="ManageSecurityArrow" src="sap-icon://navigation-right-arrow" alt="Right Arrow" width="16px" height="16px" hAlign="Right"/>
+            </Link>
+            <Link id="ManageAuthorizationsLink" text="Manage Authorizations" semanticColor="Default" onAction="onNavigate" tooltip="Manage Authorizations">
+              <Image id="ManageAuthorizationsIcon" src="sap-icon://permission" alt="Permission Icon" width="16px" height="16px" marginRight="5px"/>
+            </Link>
+            <Link id="SmartLinksLink" text="Smart Links" semanticColor="Default" onAction="onNavigate" tooltip="Smart Links">
+              <Image id="SmartLinksIcon" src="sap-icon://chain-link" alt="Chain Link Icon" width="16px" height="16px" marginRight="5px"/>
+            </Link>
+            <Link id="LogsLink" text="Logs" semanticColor="Default" onAction="onNavigate" tooltip="Logs">
+              <Image id="LogsIcon" src="sap-icon://document" alt="Document Icon" width="16px" height="16px" marginRight="5px"/>
+            </Link>
+          </Group>
+
+          <!-- Home Link at bottom (assuming it's fixed at the bottom of the scrollable nav) -->
+          <VerticalFlowLayout height="100%"/> <!-- Spacer to push Home link to bottom -->
+          <Link id="HomeLink" text="Home" semanticColor="Default" onAction="onNavigate" tooltip="Home">
+              <Image id="HomeIcon" src="sap-icon://home" alt="Home Icon" width="16px" height="16px" marginRight="5px"/>
+          </Link>
+        </VerticalFlowLayout>
+      </MatrixData>
+
+      <!-- Main Content Area -->
+      <MatrixData row="1" col="2" vAlign="top" width="calc(100% - 250px)">
+        <VerticalFlowLayout id="MainContentArea" width="100%" height="100%" padding="10px">
+          <!-- Top right global actions -->
+          <HorizontalFlowLayout id="GlobalActions" width="100%" hAlign="Right">
+            <TextView id="WorkspaceInfo" text="Workspace D60FULL - Full import - Admin" design="Caption" wrapping="false" marginRight="10px"/>
+            <Button id="ShareButton" iconSrc="sap-icon://share" tooltip="Share" onAction="onShare" design="Transparent" marginRight="5px"/>
+            <Button id="NotificationButton" iconSrc="sap-icon://bell" tooltip="Notifications" onAction="onShowNotifications" design="Transparent" marginRight="5px"/>
+            <Button id="MicrophoneButton" iconSrc="sap-icon://mic" tooltip="Voice Input" onAction="onVoiceInput" design="Transparent" marginRight="10px"/>
+            <DropDownByKey id="LanguageDropdown" width="120px" tooltip="Select Language"
+                           selectedKey="{/selectedLanguageKey}"
+                           items="{/languages}"
+                           key="key" value="value" onSelect="onLanguageChange" design="Transparent">
+              <Image id="LanguageFlag" src="sap-icon://globe" alt="Language Icon" width="16px" height="16px" marginRight="5px"/>
+              <ListItem text="EN" key="EN"/>
+              <ListItem text="English" key="English"/> <!-- Default displayed value is English -->
+            </DropDownByKey>
+            <Button id="UserButton" text="Abhishek" iconSrc="sap-icon://person-placeholder" tooltip="User Menu" onAction="onUserMenu" design="Transparent" marginRight="15px"/>
+            <Button id="CreateButton" iconSrc="sap-icon://add" tooltip="Create New" onAction="onCreateNew" design="Transparent" marginRight="5px"/>
+            <Button id="RefreshButton" iconSrc="sap-icon://synchronize" tooltip="Refresh" onAction="onRefresh" design="Transparent"/>
+          </HorizontalFlowLayout>
+
+          <!-- Transactions Overview Header -->
+          <TextView id="TransactionsOverviewHeader" text="Transactions overview" design="Title1" wrapping="false" paddingTop="20px" paddingBottom="20px"/>
+
+          <!-- Filter and Search Section -->
+          <MatrixLayout id="FilterSearchLayout" colCount="6" width="100%" cellPadding="5px" marginBottom="20px">
+            <!-- Application Area -->
+            <MatrixData row="1" col="1">
+              <Label id="ApplicationAreaLabel" text="Application Area"/>
+            </MatrixData>
+            <MatrixData row="1" col="2">
+              <DropDownByKey id="ApplicationAreaDropdown" width="200px" tooltip="Select Application Area"
+                             selectedKey="{/selectedAppAreaKey}"
+                             items="{/applicationAreas}"
+                             key="key" value="value" onSelect="onAppAreaChange">
+                <ListItem text="All Application Areas" key="ALL"/>
+                <!-- More ListItems would be bound from context -->
+              </DropDownByKey>
+            </MatrixData>
+
+            <!-- Search -->
+            <MatrixData row="1" col="3">
+              <Label id="SearchLabel" text="Search"/>
+            </MatrixData>
+            <MatrixData row="1" col="4">
+              <HorizontalFlowLayout id="SearchInputGroup">
+                  <InputField id="SearchInputField" value="{/searchQuery}" width="200px" tooltip="Enter search query"/>
+                  <Button id="SearchButton" iconSrc="sap-icon://search" tooltip="Perform Search" onAction="onSearch" design="Transparent"/>
+              </HorizontalFlowLayout>
+            </MatrixData>
+
+            <!-- Data Language -->
+            <MatrixData row="1" col="5">
+              <Label id="DataLanguageLabel" text="Data Language"/>
+            </MatrixData>
+            <MatrixData row="1" col="6">
+              <DropDownByKey id="DataLanguageDropdown" width="150px" tooltip="Select Data Language"
+                             selectedKey="{/selectedDataLanguageKey}"
+                             items="{/dataLanguages}"
+                             key="key" value="value" onSelect="onDataLanguageChange">
+                <ListItem text="English" key="EN"/>
+                <!-- More ListItems would be bound from context -->
+              </DropDownByKey>
+            </MatrixData>
+          </MatrixLayout>
+
+          <!-- Three Column Layout for Data -->
+          <MatrixLayout id="DataColumnsLayout" colCount="3" width="100%" cellPadding="10px" height="100%">
+            <!-- Column 1: Master Data -->
+            <MatrixData row="1" col="1" vAlign="top">
+              <VerticalFlowLayout id="MasterDataColumn" width="100%">
+                <TextView id="MasterDataHeader" text="Master Data" design="Heading4" wrapping="false" paddingBottom="5px"/>
+                <ScrollContainer id="MasterDataScroll" width="100%" height="auto" vScrollable="true" backgroundColor="Background2">
+                  <VerticalFlowLayout id="MasterDataList">
+                    <TextView id="MasterDataItem1" text="Composite for service master record (IS-DIMP)" padding="5px"/>
+                    <TextView id="MasterDataItem2" text="CEM BOM (IS-DIMP)" padding="5px"/>
+                    <TextView id="MasterDataItem3" text="CEM Insurance (IS-DIMP)" padding="5px"/>
+                    <TextView id="MasterDataItem4" text="CEM Condition Records (IS-DIMP)" padding="5px"/>
+                    <TextView id="MasterDataItem5" text="test sample logs" padding="5px"/>
+                    <TextView id="MasterDataItem6" text="test slash" padding="5px"/>
+                    <TextView id="MasterDataItem7" text="Flight Scheduling - Detail Record object" padding="5px"/>
+                    <TextView id="MasterDataItem8" text="Flight Scheduling - Seasonal Record object" padding="5px"/>
+                    <TextView id="MasterDataItem9" text="Spec 2000: IP Data (IS-DIMP)" padding="5px"/>
+                  </VerticalFlowLayout>
+                </ScrollContainer>
+              </VerticalFlowLayout>
+            </MatrixData>
+
+            <!-- Column 2: Transactional Data -->
+            <MatrixData row="1" col="2" vAlign="top">
+              <VerticalFlowLayout id="TransactionalDataColumn" width="100%">
+                <TextView id="TransactionalDataHeader" text="Transactional Data" design="Heading4" wrapping="false" paddingBottom="5px"/>
+                <ScrollContainer id="TransactionalDataScroll" width="100%" height="auto" vScrollable="true" backgroundColor="Background2">
+                  <VerticalFlowLayout id="TransactionalDataList">
+                    <TextView id="TransactionalDataItem1" text="/AIN/ARCH" padding="5px"/>
+                    <TextView id="TransactionalDataItem2" text="TEST" padding="5px"/>
+                    <TextView id="TransactionalDataItem3" text="custom test logs1" padding="5px"/>
+                    <TextView id="TransactionalDataItem4" text="Auto ARCH Custom object creation" padding="5px"/>
+                    <TextView id="TransactionalDataItem5" text="Excise Duty: the document table" padding="5px"/>
+                    <TextView id="TransactionalDataItem6" text="RBD Account" padding="5px"/>
+                    <TextView id="TransactionalDataItem7" text="RBD - Actual Records" padding="5px"/>
+                    <TextView id="TransactionalDataItem8" text="CEM Shipping Document (IS_DIMP)" padding="5px"/>
+                    <TextView id="TransactionalDataItem9" text="CEM PBE Document (IS-DIMP)" padding="5px"/>
+                    <TextView id="TransactionalDataItem10" text="CEM Requisition Note (IS-DIMP)" padding="5px"/>
+                  </VerticalFlowLayout>
+                </ScrollContainer>
+              </VerticalFlowLayout>
+            </MatrixData>
+
+            <!-- Column 3: Customizing Tables -->
+            <MatrixData row="1" col="3" vAlign="top">
+              <VerticalFlowLayout id="CustomizingTablesColumn" width="100%">
+                <TextView id="CustomizingTablesHeader" text="Customizing Tables" design="Heading4" wrapping="false" paddingBottom="5px"/>
+                <ScrollContainer id="CustomizingTablesScroll" width="100%" height="auto" vScrollable="true" backgroundColor="Background2">
+                  <VerticalFlowLayout id="CustomizingTablesList">
+                    <VerticalFlowLayout id="CustomizingTableItem1" padding="5px">
+                      <TextView id="CustomizingTableItem1_Line1" text="Messages (Table FEHLER)" design="Standard"/>
+                      <TextView id="CustomizingTableItem1_Line2" text="@PCL1_B1_ERT" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem2" padding="5px">
+                      <TextView id="CustomizingTableItem2_Line1" text="Extract from Infotype 0001 for Cluster B1" design="Standard"/>
+                      <TextView id="CustomizingTableItem2_Line2" text="@PCL1_B1_ITP1" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem3" padding="5px">
+                      <TextView id="CustomizingTableItem3_Line1" text="Extract from Infotype 0050 for Cluster B1" design="Standard"/>
+                      <TextView id="CustomizingTableItem3_Line2" text="@PCL1_B1_ITP50" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem4" padding="5px">
+                      <TextView id="CustomizingTableItem4_Line1" text="Extract from Infotype 0007 for Cluster B1" design="Standard"/>
+                      <TextView id="CustomizingTableItem4_Line2" text="@PCL1_B1_ITP7" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem5" padding="5px">
+                      <TextView id="CustomizingTableItem5_Line1" text="Table of Days to Be Recalculated" design="Standard"/>
+                      <TextView id="CustomizingTableItem5_Line2" text="@PCL1_B1_NCT" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem6" padding="5px">
+                      <TextView id="CustomizingTableItem6_Line1" text="Time Recording Data" design="Standard"/>
+                      <TextView id="CustomizingTableItem6_Line2" text="@PCL1_B1_NT1" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem7" padding="5px">
+                      <TextView id="CustomizingTableItem7_Line1" text="Time Recording Data" design="Standard"/>
+                      <TextView id="CustomizingTableItem7_Line2" text="@PCL1_B1_NT2" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem8" padding="5px">
+                      <TextView id="CustomizingTableItem8_Line1" text="Status of Pair Formation" design="Standard"/>
+                      <TextView id="CustomizingTableItem8_Line2" text="@PCL1_B1_QT" design="Caption"/>
+                    </VerticalFlowLayout>
+                    <VerticalFlowLayout id="CustomizingTableItem9" padding="5px">
+                      <TextView id="CustomizingTableItem9_Line1" text="Leave Deduction" design="Standard"/>
+                      <TextView id="CustomizingTableItem9_Line2" text="@PCL1_PC_PURL" design="Caption"/>
+                    </VerticalFlowLayout>
+                  </VerticalFlowLayout>
+                </ScrollContainer>
+              </VerticalFlowLayout>
+            </MatrixData>
+          </MatrixLayout>
+        </VerticalFlowLayout>
+      </MatrixData>
+    </MatrixLayout>
+  </View>
+
+  <Controller name="TransactionsOverviewController">
+    <Methods>
+      <!-- Action for general navigation links -->
+      <Method name="onNavigate">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Handles navigation link clicks and determines target based on event source.</Description>
+        <Implementation>
+          <![CDATA[
+            String linkId = event.getParameter("Id");
+            // Implement navigation logic here, e.g., call a method in a central navigation service
+            // or navigate to a different view/component based on linkId.
+            // Example: wdComponentAPI.getNavigation().navigate("TargetViewId");
+            // For now, a simple message:
+            wdComponentAPI.getMessageManager().reportSuccess("Navigating to: " + linkId);
+          ]]>
+        </Implementation>
+      </Method>
+
+      <!-- Action for ELSA Extract dropdown toggle -->
+      <Method name="onToggleELSAExtract">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Toggles the visibility of the ELSA Extract sub-menu items.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'elsaExtractExpanded'
+            boolean currentVisibility = wdContext.currentContextElement().getElsaExtractExpanded();
+            wdContext.currentContextElement().setElsaExtractExpanded(!currentVisibility);
+            wdComponentAPI.getMessageManager().reportSuccess("ELSA Extract sub-menu toggled: " + (!currentVisibility));
+          ]]>
+        </Implementation>
+      </Method>
+
+      <!-- Action for Explore dropdown toggle -->
+      <Method name="onToggleExplore">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Toggles the visibility of the Explore sub-menu items.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'exploreExpanded'
+            boolean currentVisibility = wdContext.currentContextElement().getExploreExpanded();
+            wdContext.currentContextElement().setExploreExpanded(!currentVisibility);
+            wdComponentAPI.getMessageManager().reportSuccess("Explore sub-menu toggled: " + (!currentVisibility));
+          ]]>
+        </Implementation>
+      </Method>
+
+      <!-- Global Actions Handlers -->
+      <Method name="onShare">
+        <Description>Handles the Share action, typically opens a sharing dialog.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("Share functionality triggered.");
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onShowNotifications">
+        <Description>Handles displaying notifications or opening a notification center.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("Show Notifications triggered.");
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onVoiceInput">
+        <Description>Handles voice input functionality, possibly activating a microphone.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("Voice Input triggered.");
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onLanguageChange">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Handles language selection change from the global dropdown.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'selectedLanguageKey'
+            String selectedLang = wdContext.currentContextElement().getSelectedLanguageKey();
+            wdComponentAPI.getMessageManager().reportSuccess("Global Language changed to: " + selectedLang);
+            // Additional logic to refresh UI texts based on new language
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onUserMenu">
+        <Description>Handles opening the user menu for profile, logout, etc.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("User Menu triggered for Abhishek.");
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onCreateNew">
+        <Description>Handles the Create New action, opening a creation dialog or page.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("Create New functionality triggered.");
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onRefresh">
+        <Description>Handles the Refresh action, reloading data for the current view.</Description>
+        <Implementation>
+          <![CDATA[
+            wdComponentAPI.getMessageManager().reportSuccess("Refresh triggered, reloading data.");
+            // Implement data refresh logic here
+          ]]>
+        </Implementation>
+      </Method>
+
+      <!-- Filter and Search Actions -->
+      <Method name="onAppAreaChange">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Handles application area selection change, filtering the displayed data.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'selectedAppAreaKey'
+            String selectedAppArea = wdContext.currentContextElement().getSelectedAppAreaKey();
+            wdComponentAPI.getMessageManager().reportSuccess("Application Area changed to: " + selectedAppArea);
+            // Implement logic to filter the lists based on the selected application area
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onSearch">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Performs a search operation based on the query in the search input field.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'searchQuery'
+            String searchQuery = wdContext.currentContextElement().getSearchQuery();
+            wdComponentAPI.getMessageManager().reportSuccess("Search performed for: '" + searchQuery + "'");
+            // Implement actual search logic here, e.g., filtering the displayed lists
+          ]]>
+        </Implementation>
+      </Method>
+      <Method name="onDataLanguageChange">
+        <Parameters>
+          <Parameter name="event" type="IWDActionEventHandler"/>
+        </Parameters>
+        <Description>Handles data language selection change, potentially reloading data in a different language.</Description>
+        <Implementation>
+          <![CDATA[
+            // Assuming context node 'Context' and attribute 'selectedDataLanguageKey'
+            String selectedDataLang = wdContext.currentContextElement().getSelectedDataLanguageKey();
+            wdComponentAPI.getMessageManager().reportSuccess("Data Language changed to: " + selectedDataLang);
+            // Implement logic to load/display data based on the selected data language
+          ]]>
+        </Implementation>
+      </Method>
+    </Methods>
+  </Controller>
+</WebDynpro>
