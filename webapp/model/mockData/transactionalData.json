@@ -1,0 +1,52 @@
+{
+  "transactionalData": [
+    {
+      "name": "/AIN/ARCH",
+      "description": "Description for /AIN/ARCH"
+    },
+    {
+      "name": "TEST",
+      "description": "Description for TEST"
+    },
+    {
+      "name": "custom test logs1",
+      "description": "Description for custom test logs1"
+    },
+    {
+      "name": "Auto ARCH Custom object creation",
+      "description": "Description for Auto ARCH Custom object creation"
+    },
+    {
+      "name": "Excise Duty: the document table",
+      "description": "Description for Excise Duty: the document table"
+    },
+    {
+      "name": "RBD Account",
+      "description": "Description for RBD Account"
+    },
+    {
+      "name": "RBD - Actual Records",
+      "description": "Description for RBD - Actual Records"
+    },
+    {
+      "name": "CEM Shipping Document (IS_DIMP)",
+      "description": "Description for CEM Shipping Document (IS_DIMP)"
+    },
+    {
+      "name": "CEM PBE Document (IS-DIMP)",
+      "description": "Description for CEM PBE Document (IS-DIMP)"
+    },
+    {
+      "name": "CEM Requisition Note (IS-DIMP)",
+      "description": "Description for CEM Requisition Note (IS-DIMP)"
+    },
+    {
+      "name": "New Transactional Data 1",
+      "description": "Description for New Transactional Data 1"
+    },
+    {
+      "name": "New Transactional Data 2",
+      "description": "Description for New Transactional Data 2"
+    }
+  ]
+}

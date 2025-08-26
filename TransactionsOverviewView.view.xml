@@ -14,11 +14,11 @@
                     <Breadcrumbs/>
                 </f:breadcrumbs>
                 <f:heading>
-                    <Title text="{i18n>transOverviewTitle}" level="H5"/>
+                    <Title text="Transactions overview" level="H5"/>
                 </f:heading>
                 <f:actions>
                     <Button id="createObjBtn" press="onCreateObject" visible="{=${AccPrev>/accessLevel} === 2}"
-                            type="Transparent" icon="sap-icon://add" tooltip="{i18n>createObj}"/>
+                            type="Transparent" icon="sap-icon://add" tooltip="Create"/>
                     <Button press="onRefresh" type="Transparent" icon="sap-icon://refresh" tooltip="Refresh"/>
                 </f:actions>
                 <f:expandedContent/>
@@ -30,22 +30,22 @@
                     <HBox busyIndicatorDelay="200" busy="{viewSettings>/titleBusy}" justifyContent="SpaceAround"
                           width="100%">
                         <VBox width="50%">
-                            <Label width="100%" text="{i18n>selectAppAreaLabel}"/>
+                            <Label width="100%" text="Application Area"/>
                             <ComboBox id="idAppComboBox" width="95%" showSecondaryValues="true"
                                       filterSecondaryValues="true" selectionChange="onAppSelect"
-                                      placeholder="{i18n>allAppAreasText}"
+                                      placeholder="All Application Areas"
                                       items="{ path: 'AppAreas>/applicationAreas', sorters: [{ path: 'Description' }] }">
                                 <core:ListItem key="{AppAreas>key}" text="{AppAreas>value}" additionalText="{AppAreas>key}"/>
                             </ComboBox>
                         </VBox>
                         <VBox width="30%">
-                            <Label text="{i18n>searchFieldLabel}"/>
+                            <Label text="Search"/>
                             <SearchField id="objectSearchField" liveChange="filterLists" width="95%"
                                          cust:list="idMasterObjects,idTransObjects,idCustTables"
                                          enableSuggestions="false"/>
                         </VBox>
                         <VBox width="20%">
-                            <Label text="{i18n>dataLanguage}"/>
+                            <Label text="Data Language"/>
                             <Select id="idDataLangSelect" showSecondaryValues="true"
                                     items="{ path: 'UILang>/dataLanguages', sorter: [{ path: 'value' }] }"
                                     change="onChangeDataLang" width="95%">
@@ -62,13 +62,13 @@
                                            defaultPane="default">
                     <layout:PaneContainer>
                         <layout:SplitPane>
-                            <Page title="{i18n>SDDMasterDataTitle}" enableScrolling="false">
+                            <Page title="Master Data" enableScrolling="false">
                                 <layoutData>
                                     <layout:SplitterLayoutData size="33%" minSize="250px"/>
                                 </layoutData>
                                 <customHeader>
                                     <Toolbar style="Clear" design="Transparent">
-                                        <Title level="H5" text="{i18n>SDDMasterDataTitle}"/>
+                                        <Title level="H5" text="Master Data"/>
                                     </Toolbar>
                                 </customHeader>
                                 <content>
@@ -88,13 +88,13 @@
                             </Page>
                         </layout:SplitPane>
                         <layout:SplitPane>
-                            <Page title="{i18n>SDDTransDataTitle}" enableScrolling="false">
+                            <Page title="Transactional Data" enableScrolling="false">
                                 <layoutData>
                                     <layout:SplitterLayoutData size="33%" minSize="250px"/>
                                 </layoutData>
                                 <customHeader>
                                     <Toolbar style="Clear" design="Transparent">
-                                        <Title level="H5" text="{i18n>SDDTransDataTitle}"/>
+                                        <Title level="H5" text="Transactional Data"/>
                                     </Toolbar>
                                 </customHeader>
                                 <content>
@@ -114,13 +114,13 @@
                             </Page>
                         </layout:SplitPane>
                         <layout:SplitPane>
-                            <Page title="{i18n>SDDCustTableTitle}" enableScrolling="false">
+                            <Page title="Customizing Tables" enableScrolling="false">
                                 <layoutData>
                                     <layout:SplitterLayoutData size="30%" minSize="250px"/>
                                 </layoutData>
                                 <customHeader>
                                     <Toolbar style="Clear" design="Transparent">
-                                        <Title level="H5" text="{i18n>SDDCustTableTitle}"/>
+                                        <Title level="H5" text="Customizing Tables"/>
                                     </Toolbar>
                                 </customHeader>
                                 <content>

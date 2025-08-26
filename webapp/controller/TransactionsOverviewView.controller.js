@@ -134,7 +134,7 @@ sap.ui.define([
         var oBinding = oList.getBinding("items");
 
         // Create a filter for the search query
-        var oFilter = new Filter("OBJTEXT", FilterOperator.Contains, sQuery); // Assuming 'OBJTEXT' is the field to search
+        var oFilter = new Filter("name", FilterOperator.Contains, sQuery); // Assuming 'name' is the field to search
 
         // Apply the filter to the binding
         oBinding.filter([oFilter]);

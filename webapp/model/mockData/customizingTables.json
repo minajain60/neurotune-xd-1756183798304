@@ -1,0 +1,48 @@
+{
+  "customizingTables": [
+    {
+      "name": "Messages (Table FEHLER)",
+      "description": "@PCL1_B1_ERT"
+    },
+    {
+      "name": "Extract from Infotype 0001 for Cluster B1",
+      "description": "@PCL1_B1_ITP1"
+    },
+    {
+      "name": "Extract from Infotype 0050 for Cluster B1",
+      "description": "@PCL1_B1_ITP50"
+    },
+    {
+      "name": "Extract from Infotype 0007 for Cluster B1",
+      "description": "@PCL1_B1_ITP7"
+    },
+    {
+      "name": "Table of Days to Be Recalculated",
+      "description": "@PCL1_B1_NCT"
+    },
+    {
+      "name": "Time Recording Data",
+      "description": "@PCL1_B1_NT1"
+    },
+    {
+      "name": "Time Recording Data",
+      "description": "@PCL1_B1_NT2"
+    },
+    {
+      "name": "Status of Pair Formation",
+      "description": "@PCL1_B1_QT"
+    },
+    {
+      "name": "Leave Deduction",
+      "description": "@PCL1_PC_PURL"
+    },
+    {
+      "name": "New Customizing Table 1",
+      "description": "Description for New Customizing Table 1"
+    },
+    {
+      "name": "New Customizing Table 2",
+      "description": "Description for New Customizing Table 2"
+    }
+  ]
+}
