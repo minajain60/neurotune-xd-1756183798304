@@ -17,7 +17,7 @@ sap.ui.define([
       UIComponent.prototype.init.apply(this, arguments);
 
       // Set device model
-      this.setModel(new sap.ui.model.json.JSONModel(sap.ui.Device), "device");
+      this.setModel(new sap.ui.model.json.JSONModel(Device), "device");
 
       // Initialize the router for navigation
       this.getRouter().initialize();

@@ -1,0 +1,20 @@
+{
+  "dataLanguages": [
+    {
+      "key": "EN",
+      "value": "English"
+    },
+    {
+      "key": "DE",
+      "value": "German"
+    },
+    {
+      "key": "FR",
+      "value": "French"
+    },
+    {
+      "key": "ES",
+      "value": "Spanish"
+    }
+  ]
+}

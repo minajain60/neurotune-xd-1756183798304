@@ -1,0 +1,24 @@
+{
+  "applicationAreas": [
+    {
+      "key": "ALL",
+      "value": "All Application Areas"
+    },
+    {
+      "key": "FIN",
+      "value": "Finance"
+    },
+    {
+      "key": "HR",
+      "value": "Human Resources"
+    },
+    {
+      "key": "SCM",
+      "value": "Supply Chain Management"
+    },
+    {
+      "key": "SALES",
+      "value": "Sales"
+    }
+  ]
+}

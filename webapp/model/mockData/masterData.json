@@ -1,0 +1,40 @@
+{
+  "masterData": [
+    {
+      "name": "Composite for service master record (IS-DIMP)",
+      "description": "Description for Composite service"
+    },
+    {
+      "name": "CEM BOM (IS-DIMP)",
+      "description": "Description for CEM BOM"
+    },
+    {
+      "name": "CEM Insurance (IS-DIMP)",
+      "description": "Description for CEM Insurance"
+    },
+    {
+      "name": "CEM Condition Records (IS-DIMP)",
+      "description": "Description for Condition Records"
+    },
+    {
+      "name": "test sample logs",
+      "description": "Description for Sample Logs"
+    },
+    {
+      "name": "test slash",
+      "description": "Description for Test Slash"
+    },
+    {
+      "name": "Flight Scheduling - Detail Record object",
+      "description": "Description for Flight Detail"
+    },
+    {
+      "name": "Flight Scheduling - Seasonal Record object",
+      "description": "Description for Flight Seasonal"
+    },
+    {
+      "name": "Spec 2000: IP Data (IS-DIMP)",
+      "description": "Description for Spec 2000"
+    }
+  ]
+}

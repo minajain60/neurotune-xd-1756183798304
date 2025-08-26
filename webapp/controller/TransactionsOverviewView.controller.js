@@ -35,27 +35,27 @@ sap.ui.define([
       // Load mock data for application areas
       var oApplicationAreaModel = new JSONModel();
       oApplicationAreaModel.loadData("model/mockData/applicationAreas.json");
-      this.getView().setModel(oApplicationAreaModel, "applicationAreas");
+      this.getView().setModel(oApplicationAreaModel, "AppAreas"); // Changed model name
 
       // Load mock data for data languages
       var oDataLanguageModel = new JSONModel();
       oDataLanguageModel.loadData("model/mockData/dataLanguages.json");
-      this.getView().setModel(oDataLanguageModel, "dataLanguages");
+      this.getView().setModel(oDataLanguageModel, "UILang"); // Changed model name
 
       // Load mock data for master data
       var oMasterDataModel = new JSONModel();
       oMasterDataModel.loadData("model/mockData/masterData.json");
-      this.getView().setModel(oMasterDataModel, "masterData");
+      this.getView().setModel(oMasterDataModel, "MasterDataObjects"); // Changed model name
 
       // Load mock data for transactional data
       var oTransactionalDataModel = new JSONModel();
       oTransactionalDataModel.loadData("model/mockData/transactionalData.json");
-      this.getView().setModel(oTransactionalDataModel, "transactionalData");
+      this.getView().setModel(oTransactionalDataModel, "TransDataObjects"); // Changed model name
 
       // Load mock data for customizing tables
       var oCustomizingTablesModel = new JSONModel();
       oCustomizingTablesModel.loadData("model/mockData/customizingTables.json");
-      this.getView().setModel(oCustomizingTablesModel, "customizingTables");
+      this.getView().setModel(oCustomizingTablesModel, "CustTables"); // Changed model name
 
       // Set default values for dropdowns
       var oViewModel = new JSONModel({
@@ -63,9 +63,12 @@ sap.ui.define([
         selectedDataLanguageKey: "EN",
         searchQuery: "",
         elsaExtractExpanded: false,
-        exploreExpanded: false
+        exploreExpanded: false,
+        busy: false,
+        titleBusy: false,
+        splitterBusy: false
       });
-      this.getView().setModel(oViewModel, "view");
+      this.getView().setModel(oViewModel, "viewSettings"); // Changed model name
 
       // Initialize message model for MessageArea/MessagePopover
       var oMessageModel = new JSONModel({
@@ -103,7 +106,7 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The selection change event.
      * @public
      */
-    onAppAreaChange: function (oEvent) {
+    onAppSelect: function (oEvent) { // Renamed function to match the XML
       // Get the selected key
       var sSelectedAppArea = oEvent.getSource().getSelectedKey();
       // Log the selected application area
@@ -118,26 +121,24 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The search event.
      * @public
      */
-    onSearch: function (oEvent) {
+    filterLists: function (oEvent) { // Renamed function to match the XML
       // Get the search query
-      var sQuery = oEvent.getParameter("query");
-      // Log the search query
-      console.log("Search performed for: '" + sQuery + "'");
-      // Show a message toast
-      MessageToast.show("Search performed for: '" + sQuery + "'");
+      var sQuery = oEvent.getParameter("liveChangeValue");
 
-      // Create filters for the search
-      var aFilters = [];
-      if (sQuery && sQuery.length > 0) {
-        // Apply filters to the lists based on the search query
-        aFilters.push(new Filter({
-          filters: [
-            new Filter("name", FilterOperator.Contains, sQuery),
-            new Filter("description", FilterOperator.Contains, sQuery)
-          ],
-          and: false
-        }));
-      }
+      // Get the lists to filter
+      var aLists = ["idMasterObjects", "idTransObjects", "idCustTables"];
+
+      // Loop through the lists and apply the filter
+      aLists.forEach(function (listId) {
+        var oList = this.byId(listId);
+        var oBinding = oList.getBinding("items");
+
+        // Create a filter for the search query
+        var oFilter = new Filter("OBJTEXT", FilterOperator.Contains, sQuery); // Assuming 'OBJTEXT' is the field to search
+
+        // Apply the filter to the binding
+        oBinding.filter([oFilter]);
+      }.bind(this));
     },
 
     /**
@@ -145,7 +146,7 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The selection change event.
      * @public
      */
-    onDataLanguageChange: function (oEvent) {
+    onChangeDataLang: function (oEvent) { // Renamed function to match the XML
       // Get the selected key
       var sSelectedDataLang = oEvent.getSource().getSelectedKey();
       // Log the selected data language
@@ -183,10 +184,10 @@ sap.ui.define([
      */
     onToggleELSAExtract: function () {
       // Get the current visibility state of the ELSA Extract sub-menu
-      var bCurrentVisibility = this.getView().getModel("view").getProperty("/elsaExtractExpanded");
+      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/elsaExtractExpanded"); // Changed model name
 
       // Toggle the visibility state
-      this.getView().getModel("view").setProperty("/elsaExtractExpanded", !bCurrentVisibility);
+      this.getView().getModel("viewSettings").setProperty("/elsaExtractExpanded", !bCurrentVisibility); // Changed model name
 
       // Log the action
       console.log("ELSA Extract sub-menu toggled: " + (!bCurrentVisibility));
@@ -198,10 +199,10 @@ sap.ui.define([
      */
     onToggleExplore: function () {
       // Get the current visibility state of the Explore sub-menu
-      var bCurrentVisibility = this.getView().getModel("view").getProperty("/exploreExpanded");
+      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/exploreExpanded"); // Changed model name
 
       // Toggle the visibility state
-      this.getView().getModel("view").setProperty("/exploreExpanded", !bCurrentVisibility);
+      this.getView().getModel("viewSettings").setProperty("/exploreExpanded", !bCurrentVisibility); // Changed model name
 
       // Log the action
       console.log("Explore sub-menu toggled: " + (!bCurrentVisibility));
@@ -335,189 +336,189 @@ sap.ui.define([
       }];
     },
 
-        /**
-         * Handles press event on "Home" link to navigate to the main page.
-         */
-        onNavHome: function () {
-            var oRouter = UIComponent.getRouterFor(this);
-            oRouter.navTo("main");
-        },
+    /**
+     * Handles press event on "Home" link to navigate to the main page.
+     */
+    onNavHome: function () {
+      var oRouter = UIComponent.getRouterFor(this);
+      oRouter.navTo("main");
+    },
 
-        /**
-         * Handles press event on "Manage Data" link to navigate to the manage data page.
-         */
-        onManageData: function () {
-            // Placeholder for Manage Data navigation logic
-            MessageToast.show("Navigating to Manage Data");
-        },
+    /**
+     * Handles press event on "Manage Data" link to navigate to the manage data page.
+     */
+    onManageData: function () {
+      // Placeholder for Manage Data navigation logic
+      MessageToast.show("Navigating to Manage Data");
+    },
 
-        /**
-         * Handles press event on "Extract Jobs" link to navigate to the extract jobs page.
-         */
-        onExtractJobs: function () {
-            // Placeholder for Extract Jobs navigation logic
-            MessageToast.show("Navigating to Extract Jobs");
-        },
+    /**
+     * Handles press event on "Extract Jobs" link to navigate to the extract jobs page.
+     */
+    onExtractJobs: function () {
+      // Placeholder for Extract Jobs navigation logic
+      MessageToast.show("Navigating to Extract Jobs");
+    },
 
-        /**
-         * Handles press event on "Synchronization" link to navigate to the synchronization page.
-         */
-        onSynchronization: function () {
-            // Placeholder for Synchronization navigation logic
-            MessageToast.show("Navigating to Synchronization");
-        },
+    /**
+     * Handles press event on "Synchronization" link to navigate to the synchronization page.
+     */
+    onSynchronization: function () {
+      // Placeholder for Synchronization navigation logic
+      MessageToast.show("Navigating to Synchronization");
+    },
 
-        /**
-         * Handles press event on "Reports" link to navigate to the reports page.
-         */
-        onReports: function () {
-            // Placeholder for Reports navigation logic
-            MessageToast.show("Navigating to Reports");
-        },
+    /**
+     * Handles press event on "Reports" link to navigate to the reports page.
+     */
+    onReports: function () {
+      // Placeholder for Reports navigation logic
+      MessageToast.show("Navigating to Reports");
+    },
 
-        /**
-         * Handles press event on "Transactions" link to navigate to the transactions page.
-         */
-        onTransactions: function () {
-            // Placeholder for Transactions navigation logic
-            MessageToast.show("Navigating to Transactions");
-        },
+    /**
+     * Handles press event on "Transactions" link to navigate to the transactions page.
+     */
+    onTransactions: function () {
+      // Placeholder for Transactions navigation logic
+      MessageToast.show("Navigating to Transactions");
+    },
 
-        /**
-         * Handles press event on "Data" link to navigate to the data page.
-         */
-        onData: function () {
-            // Placeholder for Data navigation logic
-            MessageToast.show("Navigating to Data");
-        },
+    /**
+     * Handles press event on "Data" link to navigate to the data page.
+     */
+    onData: function () {
+      // Placeholder for Data navigation logic
+      MessageToast.show("Navigating to Data");
+    },
 
-        /**
-         * Handles press event on "Dynamic Report" link to navigate to the dynamic report page.
-         */
-        onDynamicReport: function () {
-            // Placeholder for Dynamic Report navigation logic
-            MessageToast.show("Navigating to Dynamic Report");
-        },
+    /**
+     * Handles press event on "Dynamic Report" link to navigate to the dynamic report page.
+     */
+    onDynamicReport: function () {
+      // Placeholder for Dynamic Report navigation logic
+      MessageToast.show("Navigating to Dynamic Report");
+    },
 
-        /**
-         * Handles press event on "Text To SQL-AI Report" link to navigate to the text to SQL-AI report page.
-         */
-        onTextToSQLAIReport: function () {
-            // Placeholder for Text To SQL-AI Report navigation logic
-            MessageToast.show("Navigating to Text To SQL-AI Report");
-        },
+    /**
+     * Handles press event on "Text To SQL-AI Report" link to navigate to the text to SQL-AI report page.
+     */
+    onTextToSQLAIReport: function () {
+      // Placeholder for Text To SQL-AI Report navigation logic
+      MessageToast.show("Navigating to Text To SQL-AI Report");
+    },
 
-        /**
-         * Handles press event on "SQL Report" link to navigate to the SQL report page.
-         */
-        onSQLReport: function () {
-            // Placeholder for SQL Report navigation logic
-            MessageToast.show("Navigating to SQL Report");
-        },
+    /**
+     * Handles press event on "SQL Report" link to navigate to the SQL report page.
+     */
+    onSQLReport: function () {
+      // Placeholder for SQL Report navigation logic
+      MessageToast.show("Navigating to SQL Report");
+    },
 
-        /**
-         * Handles press event on "Accounting Report" link to navigate to the accounting report page.
-         */
-        onAccountingReport: function () {
-            // Placeholder for Accounting Report navigation logic
-            MessageToast.show("Navigating to Accounting Report");
-        },
+    /**
+     * Handles press event on "Accounting Report" link to navigate to the accounting report page.
+     */
+    onAccountingReport: function () {
+      // Placeholder for Accounting Report navigation logic
+      MessageToast.show("Navigating to Accounting Report");
+    },
 
-        /**
-         * Handles press event on "Settings" link to navigate to the settings page.
-         */
-        onSettings: function () {
-            // Placeholder for Settings navigation logic
-            MessageToast.show("Navigating to Settings");
-        },
+    /**
+     * Handles press event on "Settings" link to navigate to the settings page.
+     */
+    onSettings: function () {
+      // Placeholder for Settings navigation logic
+      MessageToast.show("Navigating to Settings");
+    },
 
-        /**
-         * Handles press event on "Data Masking" link to navigate to the data masking page.
-         */
-        onDataMasking: function () {
-            // Placeholder for Data Masking navigation logic
-            MessageToast.show("Navigating to Data Masking");
-        },
+    /**
+     * Handles press event on "Data Masking" link to navigate to the data masking page.
+     */
+    onDataMasking: function () {
+      // Placeholder for Data Masking navigation logic
+      MessageToast.show("Navigating to Data Masking");
+    },
 
-        /**
-         * Handles press event on "Manage Security" link to navigate to the manage security page.
-         */
-        onManageSecurity: function () {
-            // Placeholder for Manage Security navigation logic
-            MessageToast.show("Navigating to Manage Security");
-        },
+    /**
+     * Handles press event on "Manage Security" link to navigate to the manage security page.
+     */
+    onManageSecurity: function () {
+      // Placeholder for Manage Security navigation logic
+      MessageToast.show("Navigating to Manage Security");
+    },
 
-        /**
-         * Handles press event on "Manage Authorizations" link to navigate to the manage authorizations page.
-         */
-        onManageAuthorizations: function () {
-            // Placeholder for Manage Authorizations navigation logic
-            MessageToast.show("Navigating to Manage Authorizations");
-        },
+    /**
+     * Handles press event on "Manage Authorizations" link to navigate to the manage authorizations page.
+     */
+    onManageAuthorizations: function () {
+      // Placeholder for Manage Authorizations navigation logic
+      MessageToast.show("Navigating to Manage Authorizations");
+    },
 
-        /**
-         * Handles press event on "Smart Links" link to navigate to the smart links page.
-         */
-        onSmartLinks: function () {
-            // Placeholder for Smart Links navigation logic
-            MessageToast.show("Navigating to Smart Links");
-        },
+    /**
+     * Handles press event on "Smart Links" link to navigate to the smart links page.
+     */
+    onSmartLinks: function () {
+      // Placeholder for Smart Links navigation logic
+      MessageToast.show("Navigating to Smart Links");
+    },
 
-        /**
-         * Handles press event on "Logs" link to navigate to the logs page.
-         */
-        onLogs: function () {
-            // Placeholder for Logs navigation logic
-            MessageToast.show("Navigating to Logs");
-        },
+    /**
+     * Handles press event on "Logs" link to navigate to the logs page.
+     */
+    onLogs: function () {
+      // Placeholder for Logs navigation logic
+      MessageToast.show("Navigating to Logs");
+    },
 
-        /**
-         * Handles the Share action, typically opens a sharing dialog.
-         */
-        onShare: function () {
-            MessageToast.show("Share functionality triggered.");
-        },
+    /**
+     * Handles the Share action, typically opens a sharing dialog.
+     */
+    onShare: function () {
+      MessageToast.show("Share functionality triggered.");
+    },
 
-        /**
-         * Handles displaying notifications or opening a notification center.
-         */
-        onShowNotifications: function () {
-            MessageToast.show("Show Notifications triggered.");
-        },
+    /**
+     * Handles displaying notifications or opening a notification center.
+     */
+    onShowNotifications: function () {
+      MessageToast.show("Show Notifications triggered.");
+    },
 
-        /**
-         * Handles voice input functionality, possibly activating a microphone.
-         */
-        onVoiceInput: function () {
-            MessageToast.show("Voice Input triggered.");
-        },
+    /**
+     * Handles voice input functionality, possibly activating a microphone.
+     */
+    onVoiceInput: function () {
+      MessageToast.show("Voice Input triggered.");
+    },
 
-        /**
-         * Handles language selection change from the global dropdown.
-         */
-        onLanguageChange: function () {
-            MessageToast.show("Global Language changed.");
-        },
+    /**
+     * Handles language selection change from the global dropdown.
+     */
+    onLanguageChange: function () {
+      MessageToast.show("Global Language changed.");
+    },
 
-        /**
-         * Handles opening the user menu for profile, logout, etc.
-         */
-        onUserMenu: function () {
-            MessageToast.show("User Menu triggered.");
-        },
+    /**
+     * Handles opening the user menu for profile, logout, etc.
+     */
+    onUserMenu: function () {
+      MessageToast.show("User Menu triggered.");
+    },
 
-        /**
-         * Handles the Create New action, opening a creation dialog or page.
-         */
-        onCreateNew: function () {
-            MessageToast.show("Create New functionality triggered.");
-        },
+    /**
+     * Handles the Create New action, opening a creation dialog or page.
+     */
+    onCreateNew: function () {
+      MessageToast.show("Create New functionality triggered.");
+    },
 
-        /**
-         * Handles the Refresh action, reloading data for the current view.
-         */
-        onRefresh: function () {
-            MessageToast.show("Refresh triggered, reloading data.");
-        }
+    /**
+     * Handles the Refresh action, reloading data for the current view.
+     */
+    onRefresh: function () {
+      MessageToast.show("Refresh triggered, reloading data.");
+    }
   });
 });
