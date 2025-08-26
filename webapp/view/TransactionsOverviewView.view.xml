@@ -40,7 +40,7 @@
                         </VBox>
                         <VBox width="30%">
                             <Label text="Search"/>
-                            <SearchField id="objectSearchField" liveChange="filterLists" width="95%"
+                            <SearchField id="objectSearchField" liveChange="onSearch" width="95%"
                                          cust:list="idMasterObjects,idTransObjects,idCustTables"
                                          enableSuggestions="false"/>
                         </VBox>

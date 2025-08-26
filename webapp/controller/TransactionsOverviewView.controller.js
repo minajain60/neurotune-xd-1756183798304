@@ -8,10 +8,8 @@ sap.ui.define([
   "sap/ui/core/library",
   "sap/ui/core/UIComponent",
   "sap/ui/model/Filter",
-  "sap/ui/model/FilterOperator",
-  "sap/ui/core/util/Export",
-  "sap/ui/core/util/ExportTypeCSV"
-], function (Controller, JSONModel, MessageToast, MessageBox, MessagePopover, MessageItem, coreLibrary, UIComponent, Filter, FilterOperator, Export, ExportTypeCSV) {
+  "sap/ui/model/FilterOperator"
+], function (Controller, JSONModel, MessageToast, MessageBox, MessagePopover, MessageItem, coreLibrary, UIComponent, Filter, FilterOperator) {
   "use strict";
 
   // Shortcut for sap.ui.core.MessageType
@@ -35,27 +33,27 @@ sap.ui.define([
       // Load mock data for application areas
       var oApplicationAreaModel = new JSONModel();
       oApplicationAreaModel.loadData("model/mockData/applicationAreas.json");
-      this.getView().setModel(oApplicationAreaModel, "AppAreas"); // Changed model name
+      this.getView().setModel(oApplicationAreaModel, "AppAreas");
 
       // Load mock data for data languages
       var oDataLanguageModel = new JSONModel();
       oDataLanguageModel.loadData("model/mockData/dataLanguages.json");
-      this.getView().setModel(oDataLanguageModel, "UILang"); // Changed model name
+      this.getView().setModel(oDataLanguageModel, "UILang");
 
       // Load mock data for master data
       var oMasterDataModel = new JSONModel();
       oMasterDataModel.loadData("model/mockData/masterData.json");
-      this.getView().setModel(oMasterDataModel, "MasterDataObjects"); // Changed model name
+      this.getView().setModel(oMasterDataModel, "MasterDataObjects");
 
       // Load mock data for transactional data
       var oTransactionalDataModel = new JSONModel();
       oTransactionalDataModel.loadData("model/mockData/transactionalData.json");
-      this.getView().setModel(oTransactionalDataModel, "TransDataObjects"); // Changed model name
+      this.getView().setModel(oTransactionalDataModel, "TransDataObjects");
 
       // Load mock data for customizing tables
       var oCustomizingTablesModel = new JSONModel();
       oCustomizingTablesModel.loadData("model/mockData/customizingTables.json");
-      this.getView().setModel(oCustomizingTablesModel, "CustTables"); // Changed model name
+      this.getView().setModel(oCustomizingTablesModel, "CustTables");
 
       // Set default values for dropdowns
       var oViewModel = new JSONModel({
@@ -68,7 +66,7 @@ sap.ui.define([
         titleBusy: false,
         splitterBusy: false
       });
-      this.getView().setModel(oViewModel, "viewSettings"); // Changed model name
+      this.getView().setModel(oViewModel, "viewSettings");
 
       // Initialize message model for MessageArea/MessagePopover
       var oMessageModel = new JSONModel({
@@ -106,7 +104,7 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The selection change event.
      * @public
      */
-    onAppSelect: function (oEvent) { // Renamed function to match the XML
+    onAppSelect: function (oEvent) {
       // Get the selected key
       var sSelectedAppArea = oEvent.getSource().getSelectedKey();
       // Log the selected application area
@@ -121,20 +119,30 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The search event.
      * @public
      */
-    filterLists: function (oEvent) { // Renamed function to match the XML
+    onSearch: function (oEvent) {
       // Get the search query
       var sQuery = oEvent.getParameter("liveChangeValue");
 
-      // Get the lists to filter
-      var aLists = ["idMasterObjects", "idTransObjects", "idCustTables"];
+      // Define the lists and their corresponding models/paths
+      var aLists = [
+        {id: "idMasterObjects", model: "MasterDataObjects", path: "masterData", nameProperty: "name"},
+        {id: "idTransObjects", model: "TransDataObjects", path: "transactionalData", nameProperty: "name"},
+        {id: "idCustTables", model: "CustTables", path: "customizingTables", nameProperty: "name"}
+      ];
 
       // Loop through the lists and apply the filter
-      aLists.forEach(function (listId) {
-        var oList = this.byId(listId);
+      aLists.forEach(function (listInfo) {
+        var oList = this.byId(listInfo.id);
         var oBinding = oList.getBinding("items");
 
-        // Create a filter for the search query
-        var oFilter = new Filter("name", FilterOperator.Contains, sQuery); // Assuming 'name' is the field to search
+        // Create a filter for the search query, ensuring either name or description match
+        var oFilter = new Filter({
+          filters: [
+            new Filter(listInfo.nameProperty, FilterOperator.Contains, sQuery),
+            new Filter("description", FilterOperator.Contains, sQuery)
+          ],
+          and: false // OR condition: either name or description must match
+        });
 
         // Apply the filter to the binding
         oBinding.filter([oFilter]);
@@ -146,7 +154,7 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent The selection change event.
      * @public
      */
-    onChangeDataLang: function (oEvent) { // Renamed function to match the XML
+    onChangeDataLang: function (oEvent) {
       // Get the selected key
       var sSelectedDataLang = oEvent.getSource().getSelectedKey();
       // Log the selected data language
@@ -184,10 +192,10 @@ sap.ui.define([
      */
     onToggleELSAExtract: function () {
       // Get the current visibility state of the ELSA Extract sub-menu
-      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/elsaExtractExpanded"); // Changed model name
+      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/elsaExtractExpanded");
 
       // Toggle the visibility state
-      this.getView().getModel("viewSettings").setProperty("/elsaExtractExpanded", !bCurrentVisibility); // Changed model name
+      this.getView().getModel("viewSettings").setProperty("/elsaExtractExpanded", !bCurrentVisibility);
 
       // Log the action
       console.log("ELSA Extract sub-menu toggled: " + (!bCurrentVisibility));
@@ -199,10 +207,10 @@ sap.ui.define([
      */
     onToggleExplore: function () {
       // Get the current visibility state of the Explore sub-menu
-      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/exploreExpanded"); // Changed model name
+      var bCurrentVisibility = this.getView().getModel("viewSettings").getProperty("/exploreExpanded");
 
       // Toggle the visibility state
-      this.getView().getModel("viewSettings").setProperty("/exploreExpanded", !bCurrentVisibility); // Changed model name
+      this.getView().getModel("viewSettings").setProperty("/exploreExpanded", !bCurrentVisibility);
 
       // Log the action
       console.log("Explore sub-menu toggled: " + (!bCurrentVisibility));
